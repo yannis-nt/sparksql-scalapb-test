@@ -1,7 +1,6 @@
 package myexample
 
 import com.example.protos.demo._
-
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
@@ -14,10 +13,17 @@ import scalapb.spark.ProtoSQL
 
 object RunDemo {
 
-  def main(Args: Array[String]): Unit = {
-    val spark = SparkSession.builder().appName("ScalaPB Demo").getOrCreate()
+  val spark = SparkSession
+    .builder()
+    .appName("ScalaPB Demo")
+    .config("spark.master", "local[*]")
+    .config("spark.driver.allowMultipleContexts", "true")
+    .getOrCreate()
 
-    val sc = spark.sparkContext
+  val sc = spark.sparkContext
+
+  def main(Args: Array[String]): Unit = {
+
 
     val personsDF: DataFrame = ProtoSQL.createDataFrame(spark, testData)
 
